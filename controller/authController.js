@@ -1,11 +1,12 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const fs = require('fs')
 require("dotenv").config();
 
 const register = async (req, res) => {
   try {
-    const { name, email, password, role, profilePic } = req.body;
+    const { name, email, password, role} = req.body;
     const userExists = await User.findOne({ email });
     if (userExists)
       return res.status(400).json({ message: "User already exists" });
@@ -13,7 +14,7 @@ const register = async (req, res) => {
       name: name,
       email: email,
       password: password,
-      profilePic: profilePic || none,
+      profilePic: req.file ? req.file.path : undefined,
       role: role || "user",
     });
     await user.save();
@@ -46,7 +47,13 @@ const login = async (req, res) => {
 
 const getUsers = async (req, res) => {
   try {
-    const users = await User.find();
+    let {search, page, limit} = req.query;
+    let filter = {}
+    if(search !== undefined) filter.name = new RegExp(search, "i");
+    page = parseInt(page) || 1;
+    limit = parseInt(limit) || 5;
+    const skip = (page - 1) * limit;
+    const users = await User.find(filter).skip(skip).limit(limit);
     res.status(200).json({ users: users });
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -82,4 +89,28 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = {register, login, getUsers, getSingleUser, deleteUser, update};
+
+const updateProfilePic = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    if (user.profilePic) {
+      fs.unlink(user.profilePic, (err) => {
+        if (err) console.error('Failed to delete old profile pic:', err.message);
+      });
+    }
+
+    user.profilePic = req.file.path;
+    await user.save();
+
+    res.json({ message: 'Profile picture updated successfully', user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+module.exports = {register, login, getUsers, getSingleUser, deleteUser, update, updateProfilePic};

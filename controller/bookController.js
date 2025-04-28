@@ -22,7 +22,14 @@ const addBook = async (req, res) => {
 
 const getBooks = async (req, res) => {
   try {
-    const books = await Book.find();
+    let {search, page, limit} = req.query;
+    let filter = {}
+    if(search !== undefined) filter.title = new RegExp(search, "i");
+    if (genre !== undefined) filter.genre = genre;
+    page = parseInt(page) || 1;
+    limit = parseInt(limit) || 5;
+    const skip = (page - 1) * limit;
+    const books = await Book.find(filter).skip(skip).limit(limit);
     res.status(200).json({ Books: books });
   } catch (error) {
     console.log(error)
