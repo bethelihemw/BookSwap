@@ -18,19 +18,23 @@ const tradeSchema = new mongoose.Schema(
       ref: "Book",
       required: true,
     },
-    owner: { 
+    owner: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
     status: {
       type: String,
-      enum: ["pending", "accepted", "rejected", "completed", "cancelled"],
+      enum: ["pending", "accepted", "rejected", "completed", "cancelled", "proposed"],
       default: "pending",
     },
     proposedBookFromOwner: {
       type: Schema.Types.ObjectId,
       ref: "Book",
+    },
+    counterAcceptedByRequester: {
+      type: Boolean,
+      default: false,
     },
     notesFromRequester: {
       type: String,

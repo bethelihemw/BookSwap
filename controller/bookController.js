@@ -1,4 +1,5 @@
 const Book = require("../models/books");
+const qrcode = require("qrcode")
 
 const addBook = async (req, res) => {
   try {
@@ -13,8 +14,17 @@ const addBook = async (req, res) => {
       owner,
     });
 
-    const savedBook = await newBook.save();
-    res.status(201).json(savedBook);
+    await newBook.save();
+
+    const qrcodeData = newBook._id.toString()
+    qrcode.toDataURL(qrcodeData, (err, url) =>{
+      if (err) {
+        console.error("Error generating QR code:", err);
+        return res.status(500).json({ error: "Failed to generate QR code" })
+    }
+    })
+
+     res.status(201).json({ book: newBook, qrCode: url });
   } catch (error) {
     res.json({ message: error.message });
   }
