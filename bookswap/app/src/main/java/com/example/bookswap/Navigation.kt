@@ -1,6 +1,7 @@
 package com.example.bookswap
 
 import androidx.compose.runtime.Composable
+
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -17,38 +18,96 @@ fun BookSwapApp() {
     ) {
         composable(Routes.Login.route) {
             LoginScreen(
-                onLoginClick = { navController.navigate(Routes.Home.route) },
-                onSignupClick = { navController.navigate(Routes.Signup.route) }
+                onLoginClick = {
+                    navController.navigate(Routes.Home.route) {
+                        launchSingleTop = true
+                    }
+                },
+                onSignupClick = {
+                    navController.navigate(Routes.Signup.route) {
+                        launchSingleTop = true
+                    }
+                }
             )
         }
+
         composable(Routes.Signup.route) {
             SignupScreen(
-                onSignupClick = { navController.navigate(Routes.Home.route) },
-                onLoginClick = { navController.navigate(Routes.Login.route) }
+                onSignupClick = {
+                    navController.navigate(Routes.Home.route) {
+                        launchSingleTop = true
+                    }
+                },
+                onLoginClick = {
+                    navController.navigate(Routes.Login.route) {
+                        launchSingleTop = true
+                    }
+                }
             )
         }
+
         composable(Routes.Home.route) {
             HomeScreen(
                 books = sampleBooks,
-                onBookClick = { /* navigate to detail or show toast */ },
-                onNavigateToMyBooks = { navController.navigate(Routes.MyBooks.route) },
-                onNavigateToAddBook = { navController.navigate(Routes.AddBook.route) },
-                onNavigateToProfile = { navController.navigate(Routes.Profile.route) }
+                onBookClick = { /* TODO: Show book details */ },
+                onNavigateToMyBooks = {
+                    navController.navigate(Routes.MyBooks.route) {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToAddBook = {
+                    navController.navigate(Routes.AddBook.route) {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToProfile = {
+                    navController.navigate(Routes.Profile.route) {
+                        launchSingleTop = true
+                    }
+                }
             )
         }
+
         composable(Routes.MyBooks.route) {
             MyBooksScreen(
                 myBooks = sampleBooks,
-                onEditBook = { /* handle edit */ },
-                onDeleteBook = { /* handle delete */ },
-                onNavigateBack = { navController.popBackStack() }
+                onEditBook = { /* TODO: handle edit */ },
+                onDeleteBook = { /* TODO: handle delete */ },
+                onHomeClick = {
+                    navController.navigate(Routes.Home.route) {
+                        launchSingleTop = true
+                    }
+                },
+                onMyBooksClick = {
+                    // Already on MyBooks; do nothing or show a message
+                },
+                onAddBookClick = {
+                    navController.navigate(Routes.AddBook.route) {
+                        launchSingleTop = true
+                    }
+                },
+                onProfileClick = {
+                    navController.navigate(Routes.Profile.route) {
+                        launchSingleTop = true
+                    }
+                }
             )
         }
+
         composable(Routes.AddBook.route) {
-            AddBookScreen(onNavigateBack = { navController.popBackStack() })
+            AddBookScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
         }
+
         composable(Routes.Profile.route) {
-            ProfileScreen(onNavigateBack = { navController.popBackStack() })
+            ProfileScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }
