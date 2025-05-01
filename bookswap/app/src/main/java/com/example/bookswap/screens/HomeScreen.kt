@@ -1,41 +1,38 @@
 package com.example.bookswap.screens
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Book
-import androidx.compose.material.icons.filled.Home
-
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
-
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
-import kotlin.collections.filter
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.icons.filled.BatteryFull
-
-
+import coil.compose.AsyncImage
+import com.example.bookswap.R
 import com.example.bookswap.data.Book
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 @Composable
 fun HomeScreen(
@@ -45,18 +42,25 @@ fun HomeScreen(
     onNavigateToAddBook: () -> Unit,
     onNavigateToProfile: () -> Unit
 ) {
+
+    val backgroundColor = Color(0xFFFBEDFF)
+    val selectedNavBackground = Color(0xFF8F28C6)
+    val navIconColor = Color.Black
+    val navTextColor = Color.Black
+    val bookBorderColor = Color(0xFF8F28C6)
+
     var searchQuery by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .background(backgroundColor)
     ) {
         // Status Bar
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(BackgroundColor)
+                .background(backgroundColor)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
@@ -90,83 +94,153 @@ fun HomeScreen(
             }
         }
 
-        // Clock display
-        Text(
-            text = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")),
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.align(Alignment.End)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Page title
-        Text(
-            text = "Home",
-            style = MaterialTheme.typography.headlineMedium,
+        // Header
+        Box(
             modifier = Modifier
-                .padding(bottom = 16.dp)
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "Home",
+                style = MaterialTheme.typography.headlineMedium,
+                textAlign = TextAlign.Center
+            )
+        }
 
-
-
-        )
-
-        // Search bar - changed to filled style
+        // Search Bar
         TextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
             placeholder = { Text("Search for books...") },
-            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-            modifier = Modifier.fillMaxWidth(),
+            leadingIcon = {
+                Icon(
+                    Icons.Default.Search,
+                    contentDescription = null,
+                    tint = Color.Black
+                )
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .border(1.dp, Color.LightGray, RectangleShape)
+                .background(backgroundColor),
             colors = TextFieldDefaults.colors(
-                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+                focusedContainerColor = backgroundColor,
+                unfocusedContainerColor = backgroundColor,
+                focusedTextColor = Color.Black,
+                unfocusedTextColor = Color.Black
             ),
-            shape = MaterialTheme.shapes.extraLarge
+            shape = RectangleShape,
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(onSearch = {})
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Book grid
+        // Book Grid
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 16.dp)
         ) {
             items(books.filter {
                 it.title.contains(searchQuery, ignoreCase = true) ||
                         it.author.contains(searchQuery, ignoreCase = true)
             }) { book ->
-                BookItem(book = book, onClick = { onBookClick(book) })
+                BookItem(
+                    book = book,
+                    onClick = { onBookClick(book) },
+                    backgroundColor = backgroundColor,
+                    borderColor = bookBorderColor
+                )
             }
         }
 
-        // Bottom navigation bar - added labels
-        BottomNavigationBar(
-            onHome = { /* already on home */ },
-            onMyBooks = onNavigateToMyBooks,
-            onAddBook = onNavigateToAddBook,
-            onProfile = onNavigateToProfile
-        )
+        // Bottom Navigation
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(backgroundColor)
+                .padding(vertical = 8.dp, horizontal = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            NavigationItem(
+                icon = Icons.Default.Home,
+                label = "Home",
+                isSelected = true,
+                onClick = { /* Already on home */ },
+                selectedBackground = selectedNavBackground,
+                backgroundColor = backgroundColor,
+                iconColor = navIconColor,
+                textColor = navTextColor
+            )
+
+            NavigationItem(
+                icon = Icons.Outlined.Book,
+                label = "My Book",
+                isSelected = false,
+                onClick = onNavigateToMyBooks,
+                selectedBackground = selectedNavBackground,
+                backgroundColor = backgroundColor,
+                iconColor = navIconColor,
+                textColor = navTextColor
+            )
+
+            NavigationItem(
+                icon = Icons.Default.Add,
+                label = "Add Book",
+                isSelected = false,
+                onClick = onNavigateToAddBook,
+                selectedBackground = selectedNavBackground,
+                backgroundColor = backgroundColor,
+                iconColor = navIconColor,
+                textColor = navTextColor
+            )
+
+            NavigationItem(
+                icon = Icons.Default.Person,
+                label = "Profile",
+                isSelected = false,
+                onClick = onNavigateToProfile,
+                selectedBackground = selectedNavBackground,
+                backgroundColor = backgroundColor,
+                iconColor = navIconColor,
+                textColor = navTextColor
+            )
+        }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BookItem(book: Book, onClick: () -> Unit) {
-    Card(
-        onClick = onClick,
+fun BookItem(
+    book: Book,
+    onClick: () -> Unit,
+    backgroundColor: Color,
+    borderColor: Color
+) {
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            .border(1.dp, borderColor, RectangleShape)
+            .background(backgroundColor)
+            .clickable(onClick = onClick)
+            .padding(8.dp)
     ) {
-        Column(modifier = Modifier.padding(8.dp)) {
-            Box(
+        Column {
+            AsyncImage(
+                model = book.coverImage,
+                contentDescription = "Book Cover",
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(120.dp)
-                    .background(Color.LightGray) // Placeholder for book cover
+                    .height(120.dp),
+                placeholder = painterResource(id = R.drawable.book_placeholder),
+                error = painterResource(id = R.drawable.book_placeholder)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -175,49 +249,60 @@ fun BookItem(book: Book, onClick: () -> Unit) {
                 text = book.title,
                 style = MaterialTheme.typography.titleSmall,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                color = Color.Black
             )
 
-            Text(  // Changed from "Owner" to show author
-                text = book.author,
+            Text(
+                text = "Owner: ${book.owner ?: "Unknown"}",
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                color = Color.Black.copy(alpha = 0.6f)
             )
         }
     }
 }
 
 @Composable
-fun BottomNavigationBar(
-    onHome: () -> Unit,
-    onMyBooks: () -> Unit,
-    onAddBook: () -> Unit,
-    onProfile: () -> Unit
+private fun NavigationItem(
+    icon: ImageVector,
+    label: String,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    selectedBackground: Color,
+    backgroundColor: Color,
+    iconColor: Color,
+    textColor: Color
 ) {
-    NavigationBar {
-        NavigationBarItem(
-            selected = true,
-            onClick = onHome,
-            icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-            label = { Text("Home") }
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = onMyBooks,
-            icon = { Icon(Icons.Default.Book, contentDescription = "My Books") },
-            label = { Text(" mybooks") }
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = onAddBook,
-            icon = { Icon(Icons.Default.Add, contentDescription = "Add Book") },
-            label = { Text("Addbooks") }
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = onProfile,
-            icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
-            label = { Text("Profile") }
-        )
+    Box(
+        modifier = Modifier
+            .clip(RectangleShape)
+            .border(
+                width = 1.dp,
+                color = if (isSelected) selectedBackground else Color.LightGray,
+                shape = RectangleShape
+            )
+            .background(if (isSelected) selectedBackground else backgroundColor)
+            .clickable(onClick = onClick)
+            .padding(vertical = 12.dp, horizontal = 16.dp)
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.width(72.dp)
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = label,
+                tint = iconColor,
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = label,
+                color = textColor,
+                style = MaterialTheme.typography.labelSmall,
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
