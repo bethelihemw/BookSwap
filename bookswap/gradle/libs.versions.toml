@@ -1,5 +1,6 @@
 [versions]
 agp = "8.2.0"
+coil-compose = "3.1.0"
 kotlin = "1.9.20"
 androidx-compose-bom = "2023.10.01"
 androidx-core = "1.12.0"
@@ -36,6 +37,7 @@ coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coi
 accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
 
 # Testing
+coil3-coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil-compose" }
 junit = { group = "junit", name = "junit", version = "4.13.2" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version = "1.1.5" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version = "3.5.1" }

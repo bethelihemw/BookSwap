@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.example.bookswap"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.bookswap"
@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
 
     // ===== Architecture Components =====
+    implementation(libs.coil3.coil.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)
