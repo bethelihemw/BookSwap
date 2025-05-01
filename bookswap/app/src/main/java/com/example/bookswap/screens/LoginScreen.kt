@@ -4,10 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,6 +16,8 @@ import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bookswap.R
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Composable
 fun LoginScreen(
@@ -37,25 +36,50 @@ fun LoginScreen(
             modifier = Modifier.fillMaxSize()
         )
 
+        // Status Bar at the top
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(Icons.Default.Home, contentDescription = null, tint = Color.Black, modifier = Modifier.size(20.dp))
+            Text(
+                text = SimpleDateFormat("h:mm a", Locale.getDefault()).format(Date()),
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.Black
+            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text("100%", style = MaterialTheme.typography.bodySmall, color = Color.Black)
+                Icon(Icons.Default.BatteryFull, contentDescription = null, tint = Color.Black, modifier = Modifier.size(20.dp))
+            }
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
+                .padding(horizontal = 16.dp)
+                .padding(top = 80.dp), // Added top padding for status bar
+            verticalArrangement = Arrangement.Top, // Changed from Center to Top
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(modifier = Modifier.height(32.dp)) // Reduced initial spacing
+
             Text(
                 text = "BookSwap!",
-                fontSize = 64.sp,
-                color = Color.Black
+                fontSize = 48.sp, // Reduced font size
+                color = Color.Black,
+                modifier = Modifier.padding(bottom = 8.dp)
             )
-            Spacer(modifier = Modifier.height(8.dp))
+
             Text(
                 text = "Welcome Back! Please Log in to continue",
-                fontSize = 18.sp,
+                fontSize = 16.sp, // Reduced font size
                 color = Color.Black
             )
-            Spacer(modifier = Modifier.height(32.dp))
+
+            Spacer(modifier = Modifier.height(48.dp)) // Adjusted spacing
 
             OutlinedTextField(
                 value = email,
@@ -70,6 +94,7 @@ fun LoginScreen(
                     )
                 }
             )
+
             Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(
@@ -85,7 +110,7 @@ fun LoginScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 leadingIcon = {
                     Icon(
-                        imageVector = Icons.Default.Lock, // Using Material icon directly
+                        imageVector = Icons.Default.Lock,
                         contentDescription = "Password icon"
                     )
                 },
@@ -102,20 +127,31 @@ fun LoginScreen(
                     }
                 }
             )
-            Spacer(modifier = Modifier.height(24.dp))
+
+            Spacer(modifier = Modifier.height(32.dp))
 
             Button(
                 onClick = onLoginClick,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp), // Added fixed height
+                shape = MaterialTheme.shapes.medium,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = Color.White
+                )
             ) {
-                Text("Log in")
+                Text("Log in", fontSize = 16.sp)
             }
+
             Spacer(modifier = Modifier.height(16.dp))
 
             TextButton(onClick = onSignupClick) {
-                Text("Need to create an account? Sign Up" )
-
+                Text("Need to create an account? Sign Up")
             }
+
+            // Add flexible spacer at bottom to push content up
+            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }
