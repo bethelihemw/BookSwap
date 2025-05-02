@@ -107,3 +107,45 @@ fun LaunchScreen(
     }
 }
 
+@Composable
+private fun AppIcon() {
+    Image(
+        painter = painterResource(id=R.drawable.launchlogo),
+        contentDescription="Logo",
+        contentScale = ContentScale.Crop,
+        modifier = Modifier
+            .clip(CircleShape)
+            .size(140.dp)
+    )
+}
+
+@Composable
+private fun ErrorIcon() {
+    Icon(
+        imageVector = Icons.Default.Build,
+        contentDescription = "Error Icon",
+        tint = MaterialTheme.colorScheme.error,
+        modifier = Modifier.size(120.dp)
+    )
+}
+
+@Composable
+private fun AppTitle() {
+    Text(
+        text = "BookSwap",
+        fontSize = 32.sp,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.onBackground
+    )
+}
+
+@Composable
+private fun AppSlogan() {
+    Text(
+        text = "Welcome to BookSwap : Exchange your favourite books easily ! ",
+        fontSize = 20.sp,
+        fontWeight = FontWeight.Light,
+        textAlign = TextAlign.Center,
+        color = MaterialTheme.colorScheme.onBackground
+    )
+}
