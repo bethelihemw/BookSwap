@@ -178,6 +178,90 @@ import androidx.compose.ui.unit.sp
 
             Spacer(Modifier.height(16.dp))
 
+            // Logout Button
+            TextButton(
+                onClick = { showLogoutDialog = true },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 4.dp),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = Color.Red,
+                    containerColor = Color.Transparent
+                )
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(Alignment.Start),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ExitToApp,
+                        contentDescription = "Log Out",
+                        tint = Color.Red,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Logging Out",
+                        color = Color.Red,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+            }
+            Divider(modifier = Modifier.width(500.dp), thickness = 2.dp, color = Color.Black)
+
+            Spacer(Modifier.height(16.dp))
+
+            //Delete Button
+            TextButton(
+                onClick = { showDeleteDialog = true },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 4.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(Alignment.Start), // Align content to the start (left)
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete",
+                        tint = Color.Red,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Delete Account",
+                        color = Color.Red,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+            }
+
+            Divider(modifier = Modifier.width(500.dp), thickness = 2.dp, color = Color.Black)
+
+            // Edit / Save Button
+            Spacer(modifier = Modifier.height(64.dp))
+            Button(
+                onClick = {
+                    if (isEditing) {
+                        // Save logic here (if needed)
+                    }
+                    isEditing = !isEditing
+                },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text(if (isEditing) "Save Profile" else "Edit Profile")
+            }
+
+            Spacer(Modifier.height(32.dp))
+
+
+        }
 
             // Loading Indicator
             if (isLoading) {
