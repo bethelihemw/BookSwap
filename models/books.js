@@ -17,13 +17,14 @@ const schema = new mongoose.Schema(
       required: true,
     },
     photo: {
+
       type: String,
       required: true
     },
     owner: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required : true
+      required: true
     },
   },
   { timestamps: true }

@@ -6,7 +6,7 @@ require("dotenv").config();
 
 const register = async (req, res) => {
   try {
-    const { name, email, password, role} = req.body;
+    const { name, email, password, role } = req.body;
     const userExists = await User.findOne({ email });
     if (userExists)
       return res.status(400).json({ message: "User already exists" });
@@ -18,8 +18,8 @@ const register = async (req, res) => {
       role: role || "user",
     });
     await user.save();
-    const token = jwt.sign({id: user._id, email: user.email}, process.env.JWT_SECRET)
-    res.status(200).json({ message: "user registered successfully" , token});
+    const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET)
+    res.status(200).json({ message: "user registered successfully", token });
   } catch (error) {
     res.json({ message: error.message });
   }
@@ -31,9 +31,13 @@ const login = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(500).json({ message: "user not found!" });
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
-      return res.status(404).json({ message: "invalid credentials!" });
+    // const isMatch = await bcrypt.compare(password, user.password);
+    // if (!isMatch)
+    //   return res.status(404).json({ message: "invalid credentials!" });
+
+    if (!user || !(await user.matchPassword(password))) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
 
     const token = jwt.sign(
       { id: user._id, email: user.email, role: user.role },
@@ -47,9 +51,9 @@ const login = async (req, res) => {
 
 const getUsers = async (req, res) => {
   try {
-    let {search, page, limit} = req.query;
+    let { search, page, limit } = req.query;
     let filter = {}
-    if(search !== undefined) filter.name = new RegExp(search, "i");
+    if (search !== undefined) filter.name = new RegExp(search, "i");
     page = parseInt(page) || 1;
     limit = parseInt(limit) || 5;
     const skip = (page - 1) * limit;
@@ -113,4 +117,4 @@ const updateProfilePic = async (req, res) => {
   }
 };
 
-module.exports = {register, login, getUsers, getSingleUser, deleteUser, update, updateProfilePic};
+module.exports = { register, login, getUsers, getSingleUser, deleteUser, update, updateProfilePic };

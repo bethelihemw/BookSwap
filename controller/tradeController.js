@@ -2,6 +2,8 @@ const Trade = require("../models/trade");
 const Book = require("../models/books");
 const User = require("../models/user");
 
+const VALID_STATUSES = ["accepted", "rejected", "proposed"];
+
 // Controller function to initiate a new trade request
 const initiateTrade = async (req, res) => {
   try {
@@ -101,11 +103,12 @@ const respondToTrade = async (req, res) => {
         .json({ message: "You are not authorized to respond to this trade." });
     }
 
-    if (!["accepted", "rejected", "proposed"].includes(status)) {
+    if (!VALID_STATUSES.includes(status)) {
       return res.status(400).json({ message: "Invalid trade status." });
     }
 
     const updateData = { status, notesFromOwner: notes };
+
     if (status === "proposed" && proposedBookId) {
       const proposedBook = await Book.findById(proposedBookId);
       if (
@@ -201,7 +204,7 @@ const completeTrade = async (req, res) => {
         .json({ message: "You are not authorized to complete this trade." });
     }
 
-    if (trade.status !== "accepted" && trade.status !== "proposed") {
+    if (!["accepted", "proposed"].includes(trade.status)) {
       return res
         .status(400)
         .json({
