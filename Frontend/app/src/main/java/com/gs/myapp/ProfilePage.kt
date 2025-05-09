@@ -1,4 +1,4 @@
-//package com.gs.myapp
+package com.gs.myapp//package com.gs.myapp
 //
 //
 //
