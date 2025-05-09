@@ -253,4 +253,4 @@ fun SignupScreen(
                     )
                 }
         }
-    }
+    }}
