@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.rememberAsyncImagePainter
 import com.gs.myapp.ui.theme.color1
 import com.gs.myapp.ui.theme.color2
-//import com.example.bookswap.R
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.text.ifEmpty
@@ -45,11 +44,6 @@ fun SignupScreen(
     var confirmPassword by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
-//    val imageUri = rememberSaveable { mutableStateOf("") }
-//    val painter = rememberAsyncImagePainter(imageUri.value.ifEmpty {R.drawable.flower1 })
-//    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-//        uri?.let { imageUri.value = it.toString() }
-//    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -58,31 +52,6 @@ fun SignupScreen(
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
-//        Box(contentAlignment = Alignment.Center) {
-//            Image(
-//                painter = painter,
-//                contentDescription = "Book Cover",
-//                contentScale = ContentScale.Crop,
-//                modifier = Modifier
-//                    .size(100.dp)
-//                    .border(1.dp, Color.White)
-//            )
-//            Box(modifier = Modifier.align(Alignment.BottomEnd)
-//                .padding(horizontal = 200.dp, vertical = 150.dp)
-//           )
-//            {
-//                Icon(
-//                    imageVector = Icons.Filled.Add,
-//                    contentDescription = "add Icon",
-//                    tint = Color.Black,
-//                    modifier = Modifier
-//                        .size(34.dp)
-////                        .padding(horizontal = 300.dp, vertical = 150.dp)
-//                        .clip(CircleShape)
-//                        .clickable { launcher.launch("image/*") }
-//                )
-//            }
-//        }
         val imageUri = rememberSaveable { mutableStateOf("") }
         val painter = rememberAsyncImagePainter(imageUri.value.ifEmpty { R.drawable.flower1 })
         val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -91,9 +60,9 @@ fun SignupScreen(
 
         Box(
             modifier = Modifier
-//                    .fillMaxSize() // Make the outer Box take up the whole screen
+
                 .padding(vertical = 120.dp, horizontal = 120.dp
-                ), // Add some top padding to move it down from the very top
+                ), 
             contentAlignment = Alignment.TopCenter // Align content to the top center
         ) {
             Box(contentAlignment = Alignment.Center) {
@@ -120,26 +89,6 @@ fun SignupScreen(
             }
         }
 
-        // Status Bar at the top
-
-//        Row(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(16.dp),
-//            horizontalArrangement = Arrangement.SpaceBetween,
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
-//            Icon(Icons.Default.Home, contentDescription = null, tint = Color.Black, modifier = Modifier.size(20.dp))
-//            Text(
-//                text = SimpleDateFormat("h:mm a", Locale.getDefault()).format(Date()),
-//                style = MaterialTheme.typography.bodySmall,
-//                color = Color.Black
-//            )
-//            Row(verticalAlignment = Alignment.CenterVertically) {
-//                Text("100%", style = MaterialTheme.typography.bodySmall, color = Color.Black)
-//                Icon(Icons.Default.Lock, contentDescription = null, tint = Color.Black, modifier = Modifier.size(20.dp))
-//            }
-        }
 
         Column(
             modifier = Modifier
@@ -303,34 +252,5 @@ fun SignupScreen(
                         color = Color.Black
                     )
                 }
-            // Bottom Section - signup button and login text
-//            Column(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(bottom = 40.dp), // Added bottom padding
-//                horizontalAlignment = Alignment.CenterHorizontally
-//            ) {
-//                Button(
-//                    onClick = onSignupClick,
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(52.dp),
-//                    shape = MaterialTheme.shapes.medium,
-//                    colors = ButtonDefaults.buttonColors(
-//                        containerColor = MaterialTheme.colorScheme.primary,
-//                        contentColor = Color.White
-//                    )
-//                ) {
-//                    Text("Sign Up", fontSize = 16.sp)
-//                }
-//                Spacer(modifier = Modifier.height(12.dp))
-//
-//                TextButton(onClick = onLoginClick) {
-//                    Text(
-//                        "Already have an account? Log in",
-//                        color = Color.Black
-//                    )
-//                }
-//            }
         }
     }
