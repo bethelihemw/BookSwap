@@ -25,70 +25,34 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-//            val navController = rememberNavController()
-//            Description(navController)
-//            AppNavigation(navController = navController)
-
-
-
-//        val uiState = remember { mutableStateOf(LaunchUiState()) } // Example UI state
-//            LaunchScreen(
-//                uiState = uiState.value,
-//                onStartClicked = {
-//                    // Handle the start button click here
-//                    println("Start button clicked!")
-//                    uiState.value = uiState.value.copy(isReady = false, isLoading = true)
-//                    // Simulate loading
-//                    android.os.Handler().postDelayed({
-//                        uiState.value = uiState.value.copy(isLoading = false, isReady = true)
-//                    }, 2000)
-//                }
-//            )
-
-//            ImageS()
-            MainScreenWithBottomNav()
-
-
-
-
-//            val navController = rememberNavController()
-//            AppNavigation(navController = navController)
-
-
-
-
-
-
-//            SignupScreen(
-//                onSignupClick = {
-//                    // Handle signup button click
-//                    println("Signup button clicked!")
-//                    // Add your signup logic here (e.g., navigation, API call)
-//                },
-//                onLoginClick = {
-//                    // Handle login text click
-//                    println("Login text clicked!")
-//                    // Add your navigation to the login screen here
-//                }
-//            )
-
-
-//            MyAppTheme {
-//                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-//                    Greeting(
-//                        name = "Android",
-//                        modifier = Modifier.padding(innerPadding)
-//                    )
-//                }
-//            }
+            AppNavigation()
         }
     }
 }
 
-//@Composable
-//fun AppNavigation(navController: NavHostController) {
-//    NavHost(navController = navController, startDestination = "screenA") {
-//        composable("screenA") { LaunchScreen(navController = navController) }
-//        composable("screenB") { LoginScreen() }
-//    }
-//}
+
+@Composable
+fun AppNavigation() {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = "home") {
+        composable("launch") {
+            LaunchScreen(
+                uiState = LaunchUiState(),
+                onStartClicked = { navController.navigate("signup") }
+            )
+        }
+        composable("signup") {
+            SignupScreen(
+                onSignupClick = { /* TODO: Handle signup logic and navigate */ },
+                onLoginClick = { navController.navigate("launch") }
+            )
+        }
+        composable("home") {
+            HomePage(navController = navController) // Pass navController here
+        }
+        composable("description") {
+            Description(navController = navController)
+        }
+        // Add other composable destinations here
+    }
+}
