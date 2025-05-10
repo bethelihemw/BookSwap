@@ -1,7 +1,6 @@
 package com.gs.myapp
 
 
-//import com.example.bookswap.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -29,7 +28,6 @@ import com.gs.myapp.ui.theme.color1
 import com.gs.myapp.ui.theme.color2
 
 
-// A simple data class representing the UI state
 data class LaunchUiState(
     val isLoading: Boolean = false,
     val isReady: Boolean = false,
@@ -39,7 +37,6 @@ data class LaunchUiState(
 
 @Composable
 fun LaunchScreen(
-//    navController: NavHostController,
     uiState: LaunchUiState,
     onStartClicked: () -> Unit,
     modifier: Modifier = Modifier
@@ -100,33 +97,12 @@ fun LaunchScreen(
             ) {
 //                navController.navigate("screenB")
                 // TODO: Handle submit logic
+                onStartClicked()
             }
 
 
 
         }
-
-// Start Button (only shown when ready)
-//        if (uiState.isReady && !uiState.isLoading) {
-//            Button(
-//                onClick = onStartClicked,
-//                modifier = Modifier
-//                    .align(Alignment.BottomCenter)
-//                    .padding(24.dp)
-//                    .fillMaxWidth(),
-//                shape = RoundedCornerShape(6.dp),
-//                colors = ButtonDefaults.buttonColors(
-//                    containerColor = Color(0xFFAA1FB7),
-//                    contentColor = MaterialTheme.colorScheme.onPrimary
-//                )
-//            ) {
-//                Text(
-//                    text = "Start Swapping",
-//                    fontSize = 18.sp,
-//                    fontWeight = FontWeight.Medium
-//                )
-//            }
-//        }
 
     }
 }
@@ -173,3 +149,4 @@ private fun AppSlogan() {
         color = MaterialTheme.colorScheme.onBackground
     )
 }
+
