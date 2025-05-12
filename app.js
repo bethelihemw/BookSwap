@@ -12,7 +12,12 @@ const tradeRouter = require("./routes/tradeRoutes")
 
 const app = express()
 
-app.use(cors())
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://10.0.2.2:4000'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 app.use(express.json())
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
