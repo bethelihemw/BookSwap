@@ -1,20 +1,43 @@
 package com.gs.myapp
 
-
-
-//import android.os.Bundle
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -28,26 +51,16 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.rememberAsyncImagePainter
+import androidx.compose.ui.platform.LocalContext
+import android.widget.Toast
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import kotlin.text.ifEmpty
-
-
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(navController: NavHostController = rememberNavController()) {
     var name by remember { mutableStateOf("John Doe") }
     val email = "john.doe@example.com"
     var newPassword by remember { mutableStateOf("12345678") }
@@ -57,6 +70,7 @@ fun ProfileScreen() {
     var showLogoutDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
+    val context = LocalContext.current // Get context for Toast
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -84,25 +98,15 @@ fun ProfileScreen() {
             Spacer(Modifier.height(2.dp))
 
             // Profile Icon
-//            Icon(
-//                imageVector = Icons.Default.AccountCircle,
-//                contentDescription = "Profile",
-//                modifier = Modifier
-//                    .size(100.dp)
-//                    .clip(CircleShape),
-//                tint = MaterialTheme.colorScheme.primary
-//            )
             val imageUri = rememberSaveable { mutableStateOf("") }
-            val painter = rememberAsyncImagePainter(imageUri.value.ifEmpty { R.drawable.user })
+            val painter = rememberAsyncImagePainter(imageUri.value.ifEmpty { R.drawable.user1 })
             val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
                 uri?.let { imageUri.value = it.toString() }
             }
-
             Box(
                 modifier = Modifier
-//                    .fillMaxSize() // Make the outer Box take up the whole screen
-                    .padding(top = 5.dp), // Add some top padding to move it down from the very top
-                contentAlignment = Alignment.TopCenter // Align content to the top center
+                    .padding(top = 5.dp),
+                contentAlignment = Alignment.TopCenter
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Image(
@@ -257,7 +261,6 @@ fun ProfileScreen() {
                 }
             }
             Divider(modifier = Modifier.width(500.dp), thickness = 2.dp, color = Color.Black)
-
             Spacer(Modifier.height(16.dp))
 
             //Delete Button
@@ -288,6 +291,7 @@ fun ProfileScreen() {
                 }
             }
 
+
             Divider(modifier = Modifier.width(500.dp), thickness = 2.dp, color = Color.Black)
 
             // Edit / Save Button
@@ -299,24 +303,21 @@ fun ProfileScreen() {
                     }
                     isEditing = !isEditing
                 },
-                modifier = Modifier.fillMaxWidth()
-
+                modifier = Modifier
+                    .fillMaxWidth()
                     .background(
-                        brush = Brush.horizontalGradient( colors = listOf(Color(0xFF7800BE), Color(0xFFC41BEE)))
+                        brush = Brush.horizontalGradient(colors = listOf(Color(0xFF7800BE), Color(0xFFC41BEE)))
                     ),
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent, // Make the default container color transparent
                     contentColor = Color.White // Set your desired text color
                 ),
-//                elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
             ) {
                 Text(if (isEditing) "Save Profile" else "Edit Profile")
             }
 
             Spacer(Modifier.height(32.dp))
-
-
         }
 
         // Loading Indicator
@@ -351,7 +352,6 @@ fun ProfileScreen() {
                 }
             )
         }
-
         // Delete Account Dialog
         if (showDeleteDialog) {
             AlertDialog(
@@ -361,7 +361,14 @@ fun ProfileScreen() {
                 confirmButton = {
                     TextButton(onClick = {
                         showDeleteDialog = false
-                        // Handle deletion logic here
+                        // Simulate deletion process
+                        isLoading = true
+                        android.os.Handler().postDelayed({
+                            isLoading = false
+                            Toast.makeText(context, "Deleted successfully", Toast.LENGTH_SHORT).show()
+                            // Intentionally crash the app
+                            throw RuntimeException("App crashed after account deletion")
+                        }, 2000) // Simulate a 2-second deletion delay
                     }) {
                         Text("Delete", color = Color.Red)
                     }
